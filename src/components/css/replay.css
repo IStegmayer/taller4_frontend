@@ -1,0 +1,28 @@
+.postedBy {
+    font-size: 11px;
+}
+
+.taggerino {
+    background-color: red;
+}
+
+.likedPanel {
+    /* background-color: blue !important; */
+    width:35px;
+}
+
+.internoDiv {
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.rows .rowerino {
+    display: inline-block;
+ }
+
+.rows {
+    background-color: inherit;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
