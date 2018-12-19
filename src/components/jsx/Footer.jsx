@@ -4,11 +4,6 @@ import '../css/footer.css'
 
 export default class Footer extends Component {
 
-    constructor(props){
-        super(props);
-        
-    }
-
     render() {
 
         return (

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Link } from 'react';
 import { Grid, Form, FormGroup, Col, FormControl, Button, ToggleButton, ButtonToolbar, ToggleButtonGroup, ControlLabel } from 'react-bootstrap';
+import AlertMsg from './AlertMsg';
+import '../css/upload.css'
 
 
 export default class Upload extends Component {
@@ -12,7 +13,10 @@ export default class Upload extends Component {
     constructor(props){
         super(props);
         this.state = {
-            toggle: ''
+            toggle: '',
+            uploaded: 'false',
+            errorAlert: 'false',
+            errorMessage: ''
         }
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -27,19 +31,40 @@ export default class Upload extends Component {
         data.append('toggle', this.state.toggle);
         data.append('desc', this.descInput.value);
         
+        if (this.state.toggle === ''){
+            this.setState(() =>({
+                uploaded: 'false',
+                errorAlert: 'true',
+                errorMessage: 'Select category.'
+            }));
+            return
+        }
 
-        fetch('http://127.0.0.1:5000/upload', {
+        fetch('http://127.0.0.1:5000/api/upload', {
             method: 'POST',
             body: data,
-          })
-
-        // {{API: enviar el filerino}}
+          }).then(response => response.json())
+          .then(response => 
+            {
+                if (response['errorMessage']){
+                    this.setState(() =>({
+                        uploaded: 'false',
+                        errorAlert: 'true',
+                        errorMessage: response['errorMessage']
+                    }));
+                } else {
+                    this.setState(() =>({
+                        uploaded: 'true',
+                        errorAlert: 'false',
+                        errorMessage: ''
+                    }));
+                }
+            })
     }
 
     handleChange(e){
         let group = e.target;
         this.setState({toggle: group.value});
-        console.log(group.value);
     }
 
 
@@ -48,35 +73,39 @@ export default class Upload extends Component {
             return <ToggleButton key={category} value={category} onChange={this.handleChange}>{category}</ToggleButton>
         });
 
+        var required = true;
+
         return (
             <Grid>
+                <AlertMsg show={this.state.uploaded} style='success' msg='File uploaded successfully.'></AlertMsg>
+                <AlertMsg show={this.state.errorAlert} style='danger' msg={this.state.errorMessage}></AlertMsg>
                 <Form horizontal onSubmit={this.handleSubmit}>
                     <FormGroup controlId="formHorizontalUsername">
-                        <Col componentClass={ControlLabel} xs={3} sm={4}>
+                        <Col className="uploadForm"  componentClass={ControlLabel} xs={3} sm={4} >
                             File
                         </Col>
                         <Col xs={9} sm={4}>
-                            <FormControl type="file" inputRef={(ref) => { this.uploadInput = ref; }} />
+                            <FormControl type="file" inputRef={(ref) => { this.uploadInput = ref; }} accept=".replay"/>
                         </Col>
                     </FormGroup>
                     <FormGroup controlId="formHorizontalCategories">
-                        <Col componentClass={ControlLabel} xs={3} sm={4}>
+                        <Col className="uploadForm" componentClass={ControlLabel} xs={3} sm={4}>
                             Category
                         </Col>
                         <Col xs={9} sm={4}>
                         <ButtonToolbar >
-                                <ToggleButtonGroup name="toggleButtons" type="radio">
-                                    {categoryOptions}
-                                </ToggleButtonGroup>
-                            </ButtonToolbar>
+                            <ToggleButtonGroup name="toggleButtons" type="radio" required={required} >
+                                {categoryOptions}
+                            </ToggleButtonGroup>
+                        </ButtonToolbar>
                         </Col>
                     </FormGroup>
                     <FormGroup controlId="formHorizontalPassword">
-                        <Col componentClass={ControlLabel} xs={3} sm={4}>
+                        <Col className="uploadForm" componentClass={ControlLabel} xs={3} sm={4}>
                             Description
                         </Col>
                         <Col xs={9} sm={4}>
-                            <FormControl componentClass="textarea" inputRef={ref => { this.descInput = ref; }} placeholder="Write a short description..." maxLength="80"/>
+                            <FormControl componentClass="textarea" inputRef={ref => { this.descInput = ref; }} placeholder="Write a short description..." maxLength="80" minLength="10"/>
                         </Col>
                     </FormGroup>
                     <FormGroup>

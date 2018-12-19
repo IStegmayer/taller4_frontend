@@ -1,55 +1,68 @@
 import React, { Component } from 'react';
-import { Link } from 'react';
 import { Grid, Form, FormGroup, Col, FormControl, Button, ControlLabel } from 'react-bootstrap';
-
+import { Redirect } from 'react-router-dom'
+import '../css/login.css'
+import AlertMsg from './AlertMsg';
 
 export default class Login extends Component {
     constructor(props){
         super(props);
-        // this.state={
-        //     user: {
-        //         username: '',
-        //         password: ''
-        //     }
-        // }
+        this.state ={
+            loggedIn: false,
+            registered: 'false',
+            inputError: 'false'
+        }
 
         this.handleSubmit = this.handleSubmit.bind(this);
-        // this.handleChange = this.handleChange.bind(this)
     }
 
-    // handleChange(e) {
-    //     this.setState({
-    //         user: {
-    //             username: e.target.value,
-    //             pw: e.target.value
-                
-    //         }
-    //     })
-    // }
+    componentDidMount(){
+        if (this.props.location.state !== undefined) {
+            this.setState(() => ({
+                registered: 'true'
+            }));
+        }
+
+    }
 
     handleSubmit(e){
-        let form = e.target
-        // this.setState((state) => {
-        //     return {
-        //         user: {
-        //             username: form.elements.username.value,
-        //             password: form.elements.pw.value
-        //         }
-        //     };
-        // });
-        console.log(form.elements.username.value);
-        console.log(form.elements.pw.value);
-        // {{API: enviar los datos para loggearse}}
         e.preventDefault();
+        const data = new FormData();
+        let form = e.target
+        data.append('username', form.elements.username.value);
+        data.append('pw', form.elements.pw.value);
+        
+        fetch('http://127.0.0.1:5000/api/login', {
+            method: 'POST',
+            body: data,
+          }).then(response => response.json())
+          .then(response => 
+            {
+                if (response['error']){
+                    this.setState(() =>({
+                        inputError: 'true'
+                    }));
+                } else {
+                    this.setState(() =>({
+                        loggedIn: true
+                    }));
+                }
+            })
     }
 
 
     render() {
+        if (this.state.loggedIn === true){
+            return <Redirect to='/home' />
+        }
+
         return (
             <Grid>
+                <AlertMsg show={this.state.registered} style='success' msg='User registered successfully.'></AlertMsg>
+                <AlertMsg show={this.state.inputError} style='danger' msg='Invalid username or password.'></AlertMsg>
                 <Form horizontal onSubmit={this.handleSubmit}>
                     <FormGroup controlId="formHorizontalUsername">
-                        <Col componentClass={ControlLabel} xs={3} sm={4}>
+                        <Col className="loginForm" componentClass={ControlLabel} xs={3} sm={4}>
                             Username
                         </Col>
                         <Col xs={9} sm={4}>
@@ -57,7 +70,7 @@ export default class Login extends Component {
                         </Col>
                     </FormGroup>
                     <FormGroup controlId="formHorizontalPassword">
-                        <Col componentClass={ControlLabel} xs={3} sm={4}>
+                        <Col className="loginForm" componentClass={ControlLabel} xs={3} sm={4}>
                             Password
                         </Col>
                         <Col xs={9} sm={4}>

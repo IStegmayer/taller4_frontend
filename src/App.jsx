@@ -8,10 +8,20 @@ import Register from './components/jsx/Register';
 import Upload from './components/jsx/Upload';
 import NavBar from './components/jsx/NavBar';
 import Footer from './components/jsx/Footer';
+import Profile from './components/jsx/Profile';
 
 
 class App extends Component {
+
+  constructor(){
+    super();
+    this.state = {
+    }
+
+  }
+
   render() {
+    
     return (
       <Router >
         <div>
@@ -21,6 +31,7 @@ class App extends Component {
             <Route path="/login" component={Login} />
             <Route path="/register" component={Register} />
             <Route path="/upload" component={Upload} />
+            <Route path="/profile" component={Profile} />
           </div>
           <Footer />
         </div>

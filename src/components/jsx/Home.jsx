@@ -1,66 +1,70 @@
 import React, { Component } from 'react';
-import { Link } from 'react';
-import { Grid, Form, FormGroup, Col, FormControl, Button, ToggleButton, ButtonToolbar, ToggleButtonGroup, ControlLabel, ListGroupItem, ListGroup } from 'react-bootstrap';
-import '../css/replay.css'
+import { Grid, Col,} from 'react-bootstrap';
+import '../css/home.css'
+import Replay from './Replay';
+
 
 export default class Home extends Component {
 
-    static defaultProps = {
-      categories: ['Goal', 'Teamplay', 'FullGame', 'Save']
-    } 
-
     constructor(props){
         super(props);
-        this.state = {}
+        this.state = {
+            replays: [
+                {
+                    name: 'a',
+                    authorName: 'aa',
+                    timeStamp: '',
+                    description: '',
+                    tag: 'aa',
+                    likes: '0'
+                },
+                {
+                    name: 'b',
+                    authorName: 'aa',
+                    timeStamp: 'aa',
+                    description: 'aa',
+                    tag: 'aa',
+                    likes: '0'
+                },
+                {
+                    name: 'c',
+                    authorName: 'aa',
+                    timeStamp: 'aa',
+                    description: 'aa',
+                    tag: 'aa',
+                    likes: '0'
+                },
+            ]
+        }
 
     }
 
+    componentWillMount(){
+        fetch('http://127.0.0.1:5000/api/get-replays', {
+            method: 'GET',
+          }).then(response => response.json())
+          .then(response => 
+            {
+                if (response['msg']){
+                    this.setState(() =>({
+                        replays: response['replays']
+                    }));
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
 
     render() {
-        let categoryOptions = this.props.categories.map(category => {
-            return <ToggleButton key={category} value={category} onChange={this.handleChange}>{category}</ToggleButton>
-        });
 
         return (
             <Grid>
-                <h1>Welcome!</h1>
-                <Col sm={12}>
-                    <ListGroup>
-                        <Col sm={12}>
-                        <ListGroupItem>
-                            <div className="rows">
-                                <div className="rowerino likedPanel">
-                                    <div className="internoDiv">
-                                        <span>aa</span>
-                                    </div>
-                                    <div className="internoDiv">
-                                        <span>aa</span>
-                                    </div>
-                                    <div className="internoDiv">
-                                        <span>aa</span>
-                                    </div>
-                                </div>
-                                <div className="rowerino ">
-                                    <h4>NOMBRE DEL REPLAY</h4>
-                                    <p className="postedBy">Posted by Userino tantos days ago</p>
-                                    <p>aaaaaa a a a a a a a a a a a  a a a a a  a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a  a aa </p>
-                                    <p className="taggerino">Goal</p>
-                                </div>
-                            </div>
-                        </ListGroupItem>
-                        </Col>
-                        <Col sm={12}>
-                        <ListGroupItem header="Heading 2" href="#">
-                            Linked item
-                        </ListGroupItem>
-                        </Col>
-                        <Col sm={12}>
-                        <ListGroupItem header="Heading 3" bsStyle="primary">
-                            Danger styling
-                        </ListGroupItem>
-                        </Col>
-                    </ListGroup>
+                <Col sm={9}>
+                    <h1>Welcome to Replay City!</h1>
+                    <hr></hr>
                 </Col>
+
+                <Replay replays={this.state.replays}/>
+
             </Grid>
         )
     }

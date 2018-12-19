@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
 import { Link } from 'react'
-import { Grid, Navbar, Nav, NavItem } from 'react-bootstrap'
+import { Navbar, Nav, NavItem } from 'react-bootstrap'
+import '../css/navBar.css'
+
 
 export default class NavBar extends Component {
+
     render() {
         return (
         <Navbar default collapseOnSelect>
@@ -14,10 +17,10 @@ export default class NavBar extends Component {
             </Navbar.Header>
             <Navbar.Collapse>
                 <Nav pullRight>
-                    <NavItem eventKey={1} componentClass={Link} href="/login" to="/login">
+                    <NavItem className="navItem" eventKey={1} componentClass={Link} href="/login" to="/login">
                         Log In
                     </NavItem>
-                    <NavItem eventKey={2} componentClass={Link} href="/register" to="/register">
+                    <NavItem className="navItem" eventKey={2} componentClass={Link} href="/register" to="/register">
                         Register
                     </NavItem>
                 </Nav>

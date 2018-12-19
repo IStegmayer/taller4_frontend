@@ -23,6 +23,75 @@
 .rows {
     background-color: inherit;
     display:flex;
-    justify-content:center;
+    justify-content:left;
     align-items:center;
+}
+
+.postedBy{
+    color: #CCCCCC;   
+}
+
+.uploadDescription{
+    line-height: 9px;    
+}
+
+.taggerino {
+    display:inline;
+    margin: -5px 0px;
+    padding: 0px 4px;
+    background-color: blue;
+    border-radius: 5px;
+    line-height: -6px;    
+
+}
+
+span .Like, span .Unlike  {
+    background-image: url(../../assets/heart.png);
+    background-repeat:  no-repeat;
+    display: block;
+    width: 24px;
+    height: 20px;
+    cursor: pointer;
+    text-indent: -9999px;
+  }
+  .Like {
+    background-position: 0 0;
+  }
+  .Unlike {
+    background-position: 0 -20px;
+  }
+
+span .dlBtn {
+background-image: url(../../assets/down.png);
+background-repeat:  no-repeat;
+display: block;
+width: 30px;
+height: 30px;
+cursor: pointer;
+text-indent: -9999px;
+}
+
+.filterPanel{
+    background-color: #4E5D6C;
+    margin-bottom: 5%;
+    padding-top: 1%;
+    display:flex;
+    justify-content:left;
+    align-items:center;
+}
+
+.filterOptionLabel {
+    margin-left: 2%;
+}
+
+#filterByFilterOption {
+    margin-left: 2%;
+}
+
+.filterToggleButton {
+    background-color: rgb(67, 79, 92);
+}
+
+.filterToggleButton:hover {
+    background-color: rgb(58, 72, 85);
 }
