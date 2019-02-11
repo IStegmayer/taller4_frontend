@@ -8,38 +8,12 @@ export default class Home extends Component {
 
     constructor(props){
         super(props);
-        this.state = {
-            replays: [
-                {
-                    name: 'a',
-                    authorName: 'aa',
-                    timeStamp: '',
-                    description: '',
-                    tag: 'aa',
-                    likes: '0'
-                },
-                {
-                    name: 'b',
-                    authorName: 'aa',
-                    timeStamp: 'aa',
-                    description: 'aa',
-                    tag: 'aa',
-                    likes: '0'
-                },
-                {
-                    name: 'c',
-                    authorName: 'aa',
-                    timeStamp: 'aa',
-                    description: 'aa',
-                    tag: 'aa',
-                    likes: '0'
-                },
-            ]
-        }
+        this.state = {replays: []}
+        this.likeDislike = this.likeDislike.bind(this);
 
     }
 
-    componentWillMount(){
+    componentDidMount(){
         fetch('http://127.0.0.1:5000/api/get-replays', {
             method: 'GET',
           }).then(response => response.json())
@@ -54,6 +28,21 @@ export default class Home extends Component {
             .catch(error => console.error('Error:', error));
     }
 
+    likeDislike(e){
+        const {replays} = this.state;
+        let clickedReplay = replays[e.target.id];
+        if(clickedReplay.liked === 'Like') {
+            replays[e.target.id].liked = 'Unlike';
+            replays[e.target.id].likes -= 1;
+            this.setState(replays)
+        } else {
+            replays[e.target.id].liked = 'Like';
+            replays[e.target.id].likes += 1;
+            this.setState(replays)
+        }
+
+    }
+
     render() {
 
         return (
@@ -63,7 +52,7 @@ export default class Home extends Component {
                     <hr></hr>
                 </Col>
 
-                <Replay replays={this.state.replays}/>
+                <Replay replays={this.state.replays} likeDislike={this.likeDislike}/>
 
             </Grid>
         )

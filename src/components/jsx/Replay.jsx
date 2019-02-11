@@ -12,72 +12,51 @@ export default class Replay extends Component {
 
     constructor(props){
         super(props);
-        this.state = {
-            replays: [],
-            btnText: 'Unlike',
-        }
-        this.props.replays.map((replay, index) => {
-            this.state.replays.push({
-            name: replay.name,
-            liked: 'Unlike'
-        });
-    });
+        this.state = {};
         
     }
     
-    btnClick(e) {
-        const {replays} = this.state;
-        let clickedReplay = replays[e.target.id];
-        console.log(clickedReplay.liked);
-        if(clickedReplay.liked === 'Like') {
-            replays[e.target.id].liked = 'Unlike';
-            console.log(replays);
-            this.setState(replays)
-        } else {
-            replays[e.target.id].liked = 'Like';
-            console.log(replays);
-            this.setState(replays)
-        }
-    }
-
-
     render() {
 
-            let categoryOptions = this.props.categories.map(category => {
-                return <ToggleButton key={category} value={category} onChange={this.handleChange} className="filterToggleButton">{category}</ToggleButton>
-            });
-            let filterOptions = this.props.filters.map(filter => {
-                return <ToggleButton key={filter} value={filter} onChange={this.handleChange} className="filterToggleButton">{filter}</ToggleButton>
-            });
-            let replayList = this.props.replays.map((replay, index) => {
-                return <Col sm={9} key={replay.name}>
-                            <ListGroupItem>
-                                <div className="rows">
-                                    <div className="rowerino likedPanel">
-                                        <div className="internoDiv">
-                                            <div>
-                                                <span  onClick={ this.btnClick.bind(this) } id={index} className={this.state.replays[index].liked }>
-                                                    { this.state.replays[index].liked  }
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div className="internoDiv">
-                                            <span>{ replay.likes }</span>
-                                        </div>
-                                        <div className="internoDiv">
-                                            <span className="dlBtn"></span>
+        if (this.props.replays.length === 0 || this.props.replays === undefined){
+            return null;  
+        }
+
+
+        let categoryOptions = this.props.categories.map(category => {
+            return <ToggleButton key={category} value={category} onChange={this.handleChange} className="filterToggleButton">{category}</ToggleButton>
+        });
+        let filterOptions = this.props.filters.map(filter => {
+            return <ToggleButton key={filter} value={filter} onChange={this.handleChange} className="filterToggleButton">{filter}</ToggleButton>
+        });
+        let replayList = this.props.replays.map((replay, index) => {
+            return <Col sm={9} key={replay.name}>
+                        <ListGroupItem>
+                            <div className="rows">
+                                <div className="rowerino likedPanel">
+                                    <div className="internoDiv">
+                                        <div>
+                                            <span onClick={ this.props.likeDislike } id={index} className={ replay.liked }>
+                                            </span>
                                         </div>
                                     </div>
-                                    <div className="rowerino ">
-                                        <h4>{replay.name}</h4>
-                                        <p className="postedBy">Posted by {replay.authorName} on {replay.timeStamp}</p>
-                                        <p className="uploadDescription">{replay.description}</p>
-                                        <p className="taggerino"><span>{replay.tag}</span></p>
+                                    <div className="internoDiv">
+                                        <span>{ replay.likes }</span>
+                                    </div>
+                                    <div className="internoDiv">
+                                        <span className="dlBtn"></span>
                                     </div>
                                 </div>
-                            </ListGroupItem>
-                        </Col>
-            });
+                                <div className="rowerino ">
+                                    <h4>{replay.name}</h4>
+                                    <p className="postedBy">Posted by {replay.authorName} on {replay.timeStamp}</p>
+                                    <p className="uploadDescription">{replay.description}</p>
+                                    <p className="taggerino"><span>{replay.tag}</span></p>
+                                </div>
+                            </div>
+                        </ListGroupItem>
+                    </Col>
+        });
 
         return (
             <div>
@@ -108,6 +87,7 @@ export default class Replay extends Component {
                 </ListGroup>
             </div>
         )
+
     } 
 
 }
