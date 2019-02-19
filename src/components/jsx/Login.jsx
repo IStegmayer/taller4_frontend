@@ -31,23 +31,8 @@ export default class Login extends Component {
         let form = e.target
         data.append('username', form.elements.username.value);
         data.append('pw', form.elements.pw.value);
-        
-        fetch('http://127.0.0.1:5000/api/login', {
-            method: 'POST',
-            body: data,
-          }).then(response => response.json())
-          .then(response => 
-            {
-                if (response['error']){
-                    this.setState(() =>({
-                        inputError: 'true'
-                    }));
-                } else {
-                    this.setState(() =>({
-                        loggedIn: true
-                    }));
-                }
-            })
+    
+        //TODO: ACA TENDRIA QUE IR LA LLAMADA A AUTH CON DATA
     }
 
 
