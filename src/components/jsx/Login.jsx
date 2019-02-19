@@ -1,19 +1,26 @@
 import React, { Component } from 'react';
 import { Grid, Form, FormGroup, Col, FormControl, Button, ControlLabel } from 'react-bootstrap';
+import { instanceOf } from 'prop-types';
+import { withCookies, Cookies } from 'react-cookie';
 import { Redirect } from 'react-router-dom'
 import '../css/login.css'
 import AlertMsg from './AlertMsg';
+import auth from './auth';
 
 export default class Login extends Component {
+    static propTypes = {
+      cookies: instanceOf(Cookies).isRequired
+    };
+  
     constructor(props){
         super(props);
+        const { cookies } = props;
         this.state ={
-            loggedIn: false,
             registered: 'false',
             inputError: 'false'
         }
 
-        this.handleSubmit = this.handleSubmit.bind(this);
+        // this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     componentDidMount(){
@@ -25,22 +32,38 @@ export default class Login extends Component {
 
     }
 
-    handleSubmit(e){
+    handleSubmit = (e) => {
         e.preventDefault();
+        const { cookies } = this.props;
         const data = new FormData();
         let form = e.target
         data.append('username', form.elements.username.value);
         data.append('pw', form.elements.pw.value);
-    
-        //TODO: ACA TENDRIA QUE IR LA LLAMADA A AUTH CON DATA
+        
+        console.log(this);
+
+        return auth.login(data).then(response => {
+
+            // console.log(response);
+            if (response === true){
+                this.props.setLoggedIn();
+                cookies.set('userName', form.elements.username.value);
+                this.props.history.push('/home');
+            } else {
+                console.log(response);
+                this.setState({
+                    inputError: 'true'
+                });
+            }
+
+        });
+        
+
     }
 
 
-    render() {
-        if (this.state.loggedIn === true){
-            return <Redirect to='/home' />
-        }
 
+    render() {
         return (
             <Grid>
                 <AlertMsg show={this.state.registered} style='success' msg='User registered successfully.'></AlertMsg>

@@ -6,19 +6,19 @@ export const ProtectedRoute = ({component: Component, ...rest}) => {
     return (
         <Route {...rest} render={
             (props) => {
-                if(auth.isAuthenticated()) {
-                    return <Component {...props}/>
-                }
-                else {
+                if(this.props.loggedIn !== true && this.props.loggedIn !== 'true') {
                     return <Redirect to={
                         {
-                            pathname: "/",
-                            state: {
-                                from: props.location
-                            }
+                            pathname: "/home",
+                            // state: {
+                            //     from: props.location
+                            // }
 
                         }
                     } />
+                }
+                else {
+                    return <Component {...props}/>
                 }
             }
         }/>

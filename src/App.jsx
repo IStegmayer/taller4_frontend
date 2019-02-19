@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
+import { CookiesProvider } from 'react-cookie';
+import { instanceOf } from 'prop-types';
+import { withCookies, Cookies } from 'react-cookie';
 import './App.css';
 import './components/css/footer.css'
+import { ProtectedRoute } from './components/jsx/protected_route';
 import Home from './components/jsx/Home';
 import Login from './components/jsx/Login';
 import Register from './components/jsx/Register';
@@ -13,31 +17,62 @@ import Profile from './components/jsx/Profile';
 
 class App extends Component {
 
-  constructor(){
-    super();
+  static propTypes = {
+    cookies: instanceOf(Cookies).isRequired
+  };
+
+  constructor(props){
+    super(props);
+    const { cookies } = props;
     this.state = {
+      loggedIn: cookies.get('loggedIn') || false,
+      userName: cookies.get('userName') || false
     }
 
+    this.setLoggedIn = this.setLoggedIn.bind(this);
+    this.setLoggedOut = this.setLoggedOut.bind(this);
+
   }
+
+  setLoggedIn(){
+    const { cookies } = this.props;
+    cookies.set('loggedIn', true);
+    this.setState({
+      loggedIn: true
+    });
+  }
+
+  setLoggedOut(){
+    const { cookies } = this.props;
+    cookies.remove('loggedIn');
+    cookies.remove('userName');
+    this.setState({
+      loggedIn: false
+    });
+  }
+
+
 
   render() {
     
     return (
-      <BrowserRouter >
-        <div>
-          <NavBar />
-          <div className="mainBody container">
-            <Route path="/home" component={Home} />
-            <Route path="/login" component={Login} />
-            <Route path="/register" component={Register} />
-            <Route path="/upload" component={Upload} />
-            <Route path="/profile" component={Profile} />
+      <CookiesProvider >
+        <BrowserRouter >
+          <div>
+            <NavBar loggedIn={this.state.loggedIn} setLoggedOut={this.setLoggedOut}/>
+            <div className="mainBody container">
+              <Route path="/home" render={props => <Home loggedIn={this.state.loggedIn} {...props} />} />
+              <Route path="/login" render={props => <Login loggedIn={this.state.loggedIn} setLoggedIn={this.setLoggedIn}  {...props} />} />
+              <Route path="/register" component={Register} loggedIn={this.state.loggedIn} />
+              <Route exact path="/upload" render={props => <Upload loggedIn={this.state.loggedIn} {...props} />} />
+              <Route exact path="/profile" render={props => <Profile loggedIn={this.state.loggedIn} userName={this.state.userName} {...props} />} />
+            </div>
+            <Footer />
           </div>
-          <Footer />
-        </div>
-      </BrowserRouter>
+        </BrowserRouter>
+      </CookiesProvider >
     );
   }
 }
 
-export default App;
+export default withCookies(App);

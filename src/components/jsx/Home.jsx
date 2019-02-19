@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Grid, Col,} from 'react-bootstrap';
 import '../css/home.css'
 import Replay from './Replay';
+import auth from './auth';
 
 
 export default class Home extends Component {
@@ -27,6 +28,8 @@ export default class Home extends Component {
             })
             .catch(error => console.error('Error:', error));
     }
+
+
 
     likeDislike(e){
         const {replays} = this.state;

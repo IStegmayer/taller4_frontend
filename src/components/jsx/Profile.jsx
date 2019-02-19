@@ -9,36 +9,41 @@ export default class Home extends Component {
     constructor(props){
         super(props);
         this.state = {
-            replays: [
-                {
-                    name: 'Ayyyy.rpl',
-                    authorName: 'Pintudo',
-                    timeStamp: 'xx days ago',
-                    description: 'Ceiling triple flip reset double touch against Cloud9. eLeague tournament 3v3 14th September 2016',
-                    tag: 'Goal',
-                    likes: '300'
-                },
-                {
-                    name: 'Ayyyy2.rpl',
-                    authorName: 'Pintudo2',
-                    timeStamp: 'yy days ago',
-                    description: 'Ceiling tasdfasdfgainst Cloud9. eLeague tournament 3v3 14th September 2016',
-                    tag: 'Save',
-                    likes: '46'
-                },
-                {
-                    name: 'Ayyyy3.rpl',
-                    authorName: 'Pintudo3',
-                    timeStamp: 'zz days ago',
-                    description: 'Ceiling triple flip reset ayyyyyyyyyyyyyyyyyy urnament 3v3 14th September 2016',
-                    tag: 'Teamplay',
-                    likes: '2'
-                },
-            ]
+            replays: []
         }
+        this.likeDislike = this.likeDislike.bind(this);
 
     }
 
+    componentDidMount(){
+        fetch('http://127.0.0.1:5000/api/get-user-replays/'+this.props.userName, {
+            method: 'GET'
+          }).then(response => response.json())
+          .then(response => 
+            {
+                if (response['msg']){
+                    this.setState(() =>({
+                        replays: response['replays']
+                    }));
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    likeDislike(e){
+        const {replays} = this.state;
+        let clickedReplay = replays[e.target.id];
+        if(clickedReplay.liked === 'Like') {
+            replays[e.target.id].liked = 'Unlike';
+            replays[e.target.id].likes -= 1;
+            this.setState(replays)
+        } else {
+            replays[e.target.id].liked = 'Like';
+            replays[e.target.id].likes += 1;
+            this.setState(replays)
+        }
+
+    }
 
     render() {
 
@@ -49,7 +54,7 @@ export default class Home extends Component {
                     <hr></hr>
                 </Col>
 
-                <Replay replays={this.state.replays}/>
+                <Replay replays={this.state.replays} likeDislike={this.likeDislike}/>
 
             </Grid>
         )
