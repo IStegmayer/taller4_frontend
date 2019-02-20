@@ -63,7 +63,7 @@ class App extends Component {
           <div>
             <NavBar loggedIn={this.state.loggedIn} setLoggedOut={this.setLoggedOut}/>
             <div className="mainBody container">
-              <Route path="/home" render={props => <Home loggedIn={this.state.loggedIn} {...props} />} />
+              <Route path="/home" render={props => <Home loggedIn={this.state.loggedIn} userName={this.state.userName} {...props} />} />
               <Route path="/login" render={props => <Login loggedIn={this.state.loggedIn} setLoggedIn={this.setLoggedIn}  {...props} />} />
               <Route path="/register" component={Register} loggedIn={this.state.loggedIn} />
               <Route exact path="/upload" render={props => <Upload loggedIn={this.state.loggedIn} userName={this.state.userName} {...props} />} />

@@ -88,6 +88,10 @@ text-indent: -9999px;
     margin-left: 2%;
 }
 
+#clearFilters {
+    margin-left: 2%;
+}
+
 .filterToggleButton {
     background-color: rgb(67, 79, 92);
 }
