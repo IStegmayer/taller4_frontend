@@ -30,6 +30,7 @@ export default class Upload extends Component {
         data.append('file', this.uploadInput.files[0]);
         data.append('toggle', this.state.toggle);
         data.append('desc', this.descInput.value);
+        data.append('username', this.props.userName);
         
         if (this.state.toggle === ''){
             this.setState(() =>({

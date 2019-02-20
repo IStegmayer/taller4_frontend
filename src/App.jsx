@@ -34,11 +34,13 @@ class App extends Component {
 
   }
 
-  setLoggedIn(){
+  setLoggedIn(userName){
     const { cookies } = this.props;
     cookies.set('loggedIn', true);
+    cookies.set('userName', userName);
     this.setState({
-      loggedIn: true
+      loggedIn: true,
+      userName: userName
     });
   }
 
@@ -64,7 +66,7 @@ class App extends Component {
               <Route path="/home" render={props => <Home loggedIn={this.state.loggedIn} {...props} />} />
               <Route path="/login" render={props => <Login loggedIn={this.state.loggedIn} setLoggedIn={this.setLoggedIn}  {...props} />} />
               <Route path="/register" component={Register} loggedIn={this.state.loggedIn} />
-              <Route exact path="/upload" render={props => <Upload loggedIn={this.state.loggedIn} {...props} />} />
+              <Route exact path="/upload" render={props => <Upload loggedIn={this.state.loggedIn} userName={this.state.userName} {...props} />} />
               <Route exact path="/profile" render={props => <Profile loggedIn={this.state.loggedIn} userName={this.state.userName} {...props} />} />
             </div>
             <Footer />
